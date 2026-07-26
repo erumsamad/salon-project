@@ -5,8 +5,8 @@ ini_set('display_errors',1);
 
 header("Content-Type:application/json");
 
-include "../database.php";
-
+//include "../database.php";
+include("database.php");
 
 $phone=$_GET['phone'];
 
