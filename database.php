@@ -1,14 +1,26 @@
 <?php
 
-$host = "fdb1030.awardspace.net";
-$user = "4777716_aireceptionist";
-$pass = "YOUR_PASSWORD";
-$db   = "4777716_aireceptionist";
+$servername="fdb1030.awardspace.net";
 
-$conn = new mysqli($host, $user, $pass, $db);
+$username="4777716_aireceptionist";
 
-if ($conn->connect_error) {
-    die("DB Error: " . $conn->connect_error);
+$password="Digitonics_26";
+
+$dbname="4777716_aireceptionist";
+
+
+$conn=new mysqli(
+$servername,
+$username,
+$password,
+$dbname
+);
+
+
+if($conn->connect_error){
+
+die("Connection Failed");
+
 }
 
-echo "DB Connected";
+?>
