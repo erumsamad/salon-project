@@ -5,8 +5,8 @@ header("Content-Type:application/json");
 //include "../database.php";
 include("database.php");
 
-$phone=$_GET['phone'];
-//$phone = $_GET['phone'] ?? '';
+//$phone=$_GET['phone'];
+$phone = $_GET['phone'] ?? '';
 
 $sql="SELECT * FROM customers
 WHERE phone='$phone'";
