@@ -6,7 +6,7 @@ header("Content-Type:application/json");
 include("database.php");
 
  //$phone=$_POST['phone'];
-$phone = $_GET['phone'] ?? '';
+$phone = $_POST['phone'] ?? '';
 
 $sql="INSERT INTO customers(phone)
 VALUES('$phone')";
