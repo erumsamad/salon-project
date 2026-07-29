@@ -8,10 +8,10 @@ header("Content-Type:application/json");
 //include "../database.php";
 include("database.php");
 
-$phone=$_POST['phone'];
-
-$name=$_POST['name'];
-
+//$phone=$_POST['phone'];
+//$name=$_POST['name'];
+$phone = $_POST['phone'] ?? '';
+$name = $_POST['name'] ?? '';
 
 $sql="UPDATE customers
 
