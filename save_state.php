@@ -9,8 +9,9 @@ include("database.php");
 
 //$step=$_POST['step'];
 
-$step = $_GET['step'] ?? '';
 $phone = $_GET['phone'] ?? '';
+$step = $_GET['step'] ?? '';
+
 echo "Phone = ".$phone."<br>";
 echo "Step = ".$step."<br>";
 exit;
