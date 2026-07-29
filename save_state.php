@@ -12,9 +12,6 @@ include("database.php");
 $phone = $_GET['phone'] ?? '';
 $step = $_GET['step'] ?? '';
 
-echo "Phone = ".$phone."<br>";
-echo "Step = ".$step."<br>";
-exit;
 $sql="REPLACE INTO customer_states
 (phone,current_step)
 
