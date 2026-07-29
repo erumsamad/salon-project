@@ -11,7 +11,7 @@ include("database.php");
 //$phone=$_POST['phone'];
 //$email=$_POST['email'];
 
-$phone = $_GET['phone'] ?? '';
+$phone = $_POST['phone'] ?? '';
 $email=$_POST['email']?? '';
 
 $sql="UPDATE customers
