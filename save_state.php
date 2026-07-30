@@ -5,12 +5,12 @@ header("Content-Type:application/json");
 //include "../database.php";
 include("database.php");
 
-$phone=$_POST['phone'];
+//$phone=$_POST['phone'];
 
-$step=$_POST['step'];
+//$step=$_POST['step'];
 
-//$phone = $_GET['phone'] ?? '';
-///$step = $_GET['step'] ?? '';
+$phone = $_GET['phone'] ?? '';
+$step = $_GET['step'] ?? '';
 
 $sql="REPLACE INTO customer_states
 (phone,current_step)
