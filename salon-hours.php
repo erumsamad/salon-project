@@ -9,7 +9,14 @@ ini_set('display_errors', 1);
 //header("Content-Type: application/json");
 
 include("database.php");
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
+    echo json_encode([
+        "success" => true
+    ]);
+
+    exit;
+}
 
 /*
 |--------------------------------------------------------------------------
