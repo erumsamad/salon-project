@@ -18,6 +18,7 @@ if ($salon_id <= 0) {
 
     exit;
 }
+$limit = 100;
 
 $stmt = $conn->prepare("
     SELECT
@@ -36,9 +37,14 @@ $stmt = $conn->prepare("
     FROM customers
     WHERE salon_id = ?
     ORDER BY id DESC
+    LIMIT ?
 ");
 
-$stmt->bind_param("i", $salon_id);
+$stmt->bind_param(
+    "ii",
+    $salon_id,
+    $limit
+);
 
 $stmt->execute();
 
@@ -47,7 +53,6 @@ $result = $stmt->get_result();
 $customers = [];
 
 while ($row = $result->fetch_assoc()) {
-
     $customers[] = $row;
 }
 
