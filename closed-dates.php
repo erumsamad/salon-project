@@ -2,11 +2,20 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 include("database.php");
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
+    echo json_encode([
+        "success" => true
+    ]);
+
+    exit;
+}
 
 /*
 |--------------------------------------------------------------------------
