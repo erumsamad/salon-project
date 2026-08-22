@@ -97,12 +97,10 @@ $stmt = $conn->prepare("
       AND status = 'active'
       AND (
             valid_from IS NULL
-            OR valid_from = '0000-00-00'
             OR valid_from <= CURDATE()
           )
       AND (
             valid_until IS NULL
-            OR valid_until = '0000-00-00'
             OR valid_until >= CURDATE()
           )
     ORDER BY created_at DESC
