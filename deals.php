@@ -257,6 +257,132 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit;
 }
 
+/*
+|--------------------------------------------------------------------------
+| PUT — Update deal
+|--------------------------------------------------------------------------
+*/
+
+if ($_SERVER["REQUEST_METHOD"] === "PUT") {
+
+    $input = json_decode(
+        file_get_contents("php://input"),
+        true
+    );
+
+    $salon_id = intval(
+        $input["salon_id"] ?? 0
+    );
+
+    $id = intval(
+        $input["id"] ?? 0
+    );
+
+    $title =
+        trim($input["title"] ?? "");
+
+    $description =
+        trim($input["description"] ?? "");
+
+    $price =
+        $input["price"] ?? null;
+
+    $currency =
+        trim($input["currency"] ?? "PKR");
+
+    $image_url =
+        trim($input["image_url"] ?? "");
+
+    $valid_from =
+        $input["valid_from"] ?? null;
+
+    $valid_until =
+        $input["valid_until"] ?? null;
+
+    $status =
+        $input["status"] ?? "active";
+
+
+    if (
+        $salon_id <= 0 ||
+        $id <= 0 ||
+        empty($title)
+    ) {
+
+        echo json_encode([
+            "success" => false,
+            "message" =>
+                "Salon ID, deal ID and title are required"
+        ]);
+
+        exit;
+    }
+
+
+    if (
+        $status !== "active" &&
+        $status !== "inactive"
+    ) {
+
+        $status = "active";
+    }
+
+
+    $stmt = $conn->prepare("
+        UPDATE salon_deals
+        SET
+            title = ?,
+            description = ?,
+            price = ?,
+            currency = ?,
+            image_url = ?,
+            valid_from = ?,
+            valid_until = ?,
+            status = ?
+        WHERE id = ?
+          AND salon_id = ?
+    ");
+
+
+    $stmt->bind_param(
+        "ssdssssiii",
+        $title,
+        $description,
+        $price,
+        $currency,
+        $image_url,
+        $valid_from,
+        $valid_until,
+        $status,
+        $id,
+        $salon_id
+    );
+
+
+    if ($stmt->execute()) {
+
+        echo json_encode([
+            "success" => true,
+            "message" =>
+                "Deal updated successfully"
+        ]);
+
+    } else {
+
+        echo json_encode([
+            "success" => false,
+            "message" =>
+                "Unable to update deal"
+        ]);
+
+    }
+
+
+    $stmt->close();
+    $conn->close();
+
+    exit;
+}
 
 /*
 |--------------------------------------------------------------------------
