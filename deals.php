@@ -257,101 +257,132 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 if ($_SERVER["REQUEST_METHOD"] === "PUT") {
 
-    $input = json_decode(
-        file_get_contents("php://input"),
-        true
-    );
+    try {
 
-    $salon_id = intval(
-        $input["salon_id"] ?? 0
-    );
-
-    $id = intval(
-        $input["id"] ?? 0
-    );
-
-    $title =
-        trim($input["title"] ?? "");
-
-    $description =
-        trim($input["description"] ?? "");
-
-    $price =
-        $input["price"] ?? null;
-
-    $currency =
-        trim($input["currency"] ?? "PKR");
-
-    $image_url =
-        trim($input["image_url"] ?? "");
-
-    $valid_from =
-        $input["valid_from"] ?? null;
-
-    $valid_until =
-        $input["valid_until"] ?? null;
-
-    $status =
-        $input["status"] ?? "active";
+        $input = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
 
 
-    if (
-        $salon_id <= 0 ||
-        $id <= 0 ||
-        empty($title)
-    ) {
+        if (!is_array($input)) {
 
-        echo json_encode([
-            "success" => false,
-            "message" =>
-                "Salon ID, deal ID and title are required"
-        ]);
+            echo json_encode([
+                "success" => false,
+                "message" => "Invalid JSON data"
+            ]);
 
-        exit;
-    }
+            exit;
+        }
 
 
-    if (
-        $status !== "active" &&
-        $status !== "inactive"
-    ) {
+        $salon_id = intval(
+            $input["salon_id"] ?? 0
+        );
 
-        $status = "active";
-    }
+        $id = intval(
+            $input["id"] ?? 0
+        );
 
+        $title = trim(
+            $input["title"] ?? ""
+        );
 
-    $stmt = $conn->prepare("
-        UPDATE salon_deals
-        SET
-            title = ?,
-            description = ?,
-            price = ?,
-            currency = ?,
-            image_url = ?,
-            valid_from = ?,
-            valid_until = ?,
-            status = ?
-        WHERE id = ?
-          AND salon_id = ?
-    ");
+        $description = trim(
+            $input["description"] ?? ""
+        );
 
+        $price =
+            ($input["price"] ?? null);
 
-    $stmt->bind_param(
-        "ssdssssiii",
-        $title,
-        $description,
-        $price,
-        $currency,
-        $image_url,
-        $valid_from,
-        $valid_until,
-        $status,
-        $id,
-        $salon_id
-    );
+        $currency = trim(
+            $input["currency"] ?? "PKR"
+        );
+
+        $image_url = trim(
+            $input["image_url"] ?? ""
+        );
+
+        $valid_from =
+            $input["valid_from"] ?? null;
+
+        $valid_until =
+            $input["valid_until"] ?? null;
+
+        $status =
+            $input["status"] ?? "active";
 
 
-    if ($stmt->execute()) {
+        /*
+        |--------------------------------------------------------------------------
+        | Validation
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $salon_id <= 0 ||
+            $id <= 0 ||
+            $title === ""
+        ) {
+
+            echo json_encode([
+                "success" => false,
+                "message" =>
+                    "Salon ID, deal ID and title are required"
+            ]);
+
+            exit;
+        }
+
+
+        if (
+            $status !== "active" &&
+            $status !== "inactive"
+        ) {
+
+            $status = "active";
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update
+        |--------------------------------------------------------------------------
+        */
+
+        $stmt = $conn->prepare("
+            UPDATE salon_deals
+            SET
+                title = ?,
+                description = ?,
+                price = ?,
+                currency = ?,
+                image_url = ?,
+                valid_from = ?,
+                valid_until = ?,
+                status = ?
+            WHERE id = ?
+              AND salon_id = ?
+        ");
+
+
+        $stmt->bind_param(
+            "ssdssssiii",
+            $title,
+            $description,
+            $price,
+            $currency,
+            $image_url,
+            $valid_from,
+            $valid_until,
+            $status,
+            $id,
+            $salon_id
+        );
+
+
+        $stmt->execute();
+
 
         echo json_encode([
             "success" => true,
@@ -359,21 +390,29 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT") {
                 "Deal updated successfully"
         ]);
 
-    } else {
+
+        $stmt->close();
+        $conn->close();
+
+        exit;
+
+
+    } catch (Throwable $e) {
+
+        http_response_code(500);
 
         echo json_encode([
+
             "success" => false,
+
             "message" =>
-                "Unable to update deal"
+                "Update failed: " .
+                $e->getMessage()
+
         ]);
 
+        exit;
     }
-
-
-    $stmt->close();
-    $conn->close();
-
-    exit;
 }
 
 /*
